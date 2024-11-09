@@ -70,7 +70,7 @@
   (gl:enable-vertex-attrib-array 0)
   (gl:enable-vertex-attrib-array 1)
   (gl:vertex-attrib-pointer 0 2 :float :false (float-steps 5) 0)
-  (gl:vertex-attrib-pointer 1 3 :float :false (float-steps 6) (float-steps 3)))
+  (gl:vertex-attrib-pointer 1 3 :float :false (float-steps 5) (float-steps 2)))
 
 (defun rendering-code (win)
   (gl:clear :color-buffer-bit)
