@@ -8,6 +8,6 @@
   :components ((:module "triangle"
 		:components ((:file "package")
 			     (:file "triangle" :depends-on ("package"))))
-	       ((:module "square"
-		 :components ((:file "package")
-			      (:file "square" :depends-on ("package")))))))
+	       (:module "square"
+		:components ((:file "package")
+			     (:file "square" :depends-on ("package"))))))
