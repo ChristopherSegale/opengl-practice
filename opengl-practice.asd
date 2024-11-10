@@ -10,4 +10,7 @@
 			     (:file "triangle" :depends-on ("package"))))
 	       (:module "square"
 		:components ((:file "package")
-			     (:file "square" :depends-on ("package"))))))
+			     (:file "square" :depends-on ("package"))))
+	       (:module "geometry"
+		:components ((:file "package")
+			     (:file "geometry" :depends-on ("package"))))))
