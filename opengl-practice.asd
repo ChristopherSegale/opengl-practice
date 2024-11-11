@@ -8,10 +8,10 @@
   :components ((:module "util"
 		:components ((:file "package")
 			     (:file "util" :depends-on ("package"))))
-	       (:module "triangle"
+	       (:module "triangle" :depends-on ("util")
 		:components ((:file "package")
 			     (:file "triangle" :depends-on ("package"))))
-	       (:module "square"
+	       (:module "square" :depends-on ("util")
 		:components ((:file "package")
 			     (:file "square" :depends-on ("package"))))
 	       (:module "geometry" :depends-on ("util")

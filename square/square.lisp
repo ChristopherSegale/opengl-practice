@@ -1,9 +1,5 @@
 (in-package :square)
 
-(defvar *width* 800)
-(defvar *height* 600)
-(defvar *float-size* 4)
-
 (defvar *vertex-source* (create-shader (:version 330)
 				       (:in (:layout (:location 0)) :vec2 v-position)
 				       (:in (:layout (:location 1)) :vec3 in-color)
@@ -25,17 +21,6 @@
 		   0.5 -0.5 1.0 0.5 0.2   ;bottom-right point
 		   -0.5 -0.5 1.0 0.5 0.2  ;bottom-left point
 		   -0.5 0.5 1.0 0.5 0.2)) ;top-left point
-
-(defun float-steps (n)
-  (* n *float-size*))
-
-;;Allocate and store buffer data
-(defun create-gl-array (cl-vert)
-  (let ((arr (gl:alloc-gl-array :float (length cl-vert))))
-    (dotimes (i (length cl-vert))
-      (setf (gl:glaref arr i) (aref cl-vert i)))
-    (gl:buffer-data :array-buffer :static-draw arr)
-    (gl:free-gl-array arr)))
 
 (defun create-shader-program ()
   (let ((vs (gl:create-shader :vertex-shader))
@@ -78,16 +63,10 @@
   (sdl2:gl-swap-window win))
 
 (defun main ()
-  (sdl2:with-init (:video :timer)
-    (sdl2:with-window (win :title "Square" :w *width* :h *height* :flags '(:shown :opengl))
-      (sdl2:with-gl-context (gl-con win)
-	(let ((position-buffer-object (initialize-gl)))
-	  (sdl2:with-event-loop (:method :poll)
-	    (:keyup
-	     (:keysym keysym)
-	     (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-escape)
-	       (sdl2:push-event :quit)))
-	    (:idle ()
-		   (assign-vertex-attributes position-buffer-object)
-		   (rendering-code win))
-	    (:quit () t)))))))
+  (run-window :sdl2-init-flags (:video :timer)
+	      :title "Square"
+	      :buffer-object-value (initialize-gl)
+	      :render-function (lambda (b w)
+				 (assign-vertex-attributes b)
+				 (rendering-code w))
+	      :render-args (util::buffer util::win)))

@@ -1,3 +1,3 @@
 (defpackage :util
   (:use :cl)
-  (:export :run-window))
+  (:export :float-steps :create-gl-array :compile-shader :run-window))

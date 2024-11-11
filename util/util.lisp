@@ -3,6 +3,23 @@
 (defvar *width* 800)
 (defvar *height* 600)
 
+(defvar *float-size* 4)
+
+(defun float-steps (n)
+  (* n *float-size*))
+
+;;Allocate and store buffer data
+(defun create-gl-array (cl-vert)
+  (let ((arr (gl:alloc-gl-array :float (length cl-vert))))
+    (dotimes (i (length cl-vert))
+      (setf (gl:glaref arr i) (aref cl-vert i)))
+    (gl:buffer-data :array-buffer :static-draw arr)
+    (gl:free-gl-array arr)))
+
+(defun compile-shader (shader source)
+  (gl:shader-source shader source)
+  (gl:compile-shader shader))
+
 (defmacro run-window (&key (sdl2-init-flags '(:everything))
 			(window 'win)
 			(title "example")

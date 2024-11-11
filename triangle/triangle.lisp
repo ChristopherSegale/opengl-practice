@@ -1,8 +1,5 @@
 (in-package :triangle)
 
-(defvar *width* 800)
-(defvar *height* 600)
-
 (defvar *vertex-source* (create-shader
 			  (:version 330)
 			  (:in (:layout (:location 0)) :vec2 v-position)
@@ -18,14 +15,6 @@
 (defvar *vertices* #(-0.5 -0.5
 		     0.5 -0.5
 		     0.0 0.5))
-
-;;Allocate and store buffer data
-(defun create-gl-array (cl-vert)
-  (let ((arr (gl:alloc-gl-array :float (length cl-vert))))
-    (dotimes (i (length cl-vert))
-      (setf (gl:glaref arr i) (aref cl-vert i)))
-    (gl:buffer-data :array-buffer :static-draw arr)
-    (gl:free-gl-array arr)))
 
 (defun create-shader-program ()
   (let ((vs (gl:create-shader :vertex-shader))
@@ -56,19 +45,14 @@
     position-buffer-object))
 
 (defun main ()
-  (sdl2:with-init (:everything)
-    (sdl2:with-window (win :title "Triangle" :w *width* :h *height* :flags '(:shown :opengl))
-      (sdl2:with-gl-context (gl-con win)
-	(let ((position-buffer-object (initialize-gl)))
-	  (sdl2:with-event-loop (:method :poll)
-	    (:keyup
-	     (:keysym keysym)
-	     (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-escape)
-	       (sdl2:push-event :quit)))
-	    (:idle ()
-		   (gl:bind-buffer :array-buffer position-buffer-object)
-		   (gl:enable-vertex-attrib-array 0)
-		   (gl:vertex-attrib-pointer 0 2 :float :false 0 0)
-		   (gl:draw-arrays :triangles 0 3)
-		   (sdl2:gl-swap-window win))
-	    (:quit () t)))))))
+  (run-window :sdl2-init-flags (:video :timer)
+	      :title "Triangle"
+	      :buffer-object-value (initialize-gl)
+	      :render-function (lambda (b w)
+				 (gl:bind-buffer :array-buffer b)
+				 (gl:enable-vertex-attrib-array 0)
+				 (gl:vertex-attrib-pointer 0 2 :float :false 0 0)
+				 (gl:clear :color-buffer-bit)
+				 (gl:draw-arrays :triangles 0 3)
+				 (sdl2:gl-swap-window w))
+	      :render-args (util::buffer util::win)))
