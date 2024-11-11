@@ -5,12 +5,15 @@
   :license "MIT"
   :depends-on (:sdl2 :cl-opengl :create-shader)
   :serial t
-  :components ((:module "triangle"
+  :components ((:module "util"
+		:components ((:file "package")
+			     (:file "util" :depends-on ("package"))))
+	       (:module "triangle"
 		:components ((:file "package")
 			     (:file "triangle" :depends-on ("package"))))
 	       (:module "square"
 		:components ((:file "package")
 			     (:file "square" :depends-on ("package"))))
-	       (:module "geometry"
+	       (:module "geometry" :depends-on ("util")
 		:components ((:file "package")
 			     (:file "geometry" :depends-on ("package"))))))

@@ -1,8 +1,5 @@
 (in-package :geometry)
 
-(defvar *width* 800)
-(defvar *height* 600)
-
 (defvar *vertex-source* (create-shader (:version 330)
 				       (:in (:layout (:location 0)) :vec2 v-position)
 				       (:function :void main nil
@@ -88,15 +85,9 @@ void main()
   (sdl2:gl-swap-window win))
 
 (defun main ()
-  (sdl2:with-init (:video :timer)
-    (sdl2:with-window (win :title "Geometry" :w *width* :h *height* :flags '(:shown :opengl))
-      (sdl2:with-gl-context (gl-con win)
-	(let ((position-buffer-object (initialize-gl)))
-	  (sdl2:with-event-loop (:method :poll)
-	    (:keyup
-	     (:keysym keysym)
-	     (when (sdl2:scancode= (sdl2:scancode-value keysym) :scancode-escape)
-	       (sdl2:push-event :quit)))
-	    (:idle ()
-		   (render-code position-buffer-object win))
-	    (:quit () t)))))))
+  (run-window :sdl2-init-flags (:video :timer)
+	      :title "Geometry"
+	      :sdl2-window-flags (:shown :opengl)
+	      :buffer-object-value (initialize-gl)
+	      :render-function #'render-code
+	      :render-args (util::buffer util::win)))
