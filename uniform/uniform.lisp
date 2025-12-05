@@ -51,21 +51,25 @@ void main()
     (setf u-location (gl:get-uniform-location gl-program "projection"))
     (if (= -1 u-location)
 	(error "Uniform ~a not found in program ~a" "projection" gl-program)
-	(gl:uniform-matrix-4fv u-location transformation nil))
+	(%gl:uniform-matrix-4fv u-location 1 nil transformation))
     position-buffer-object))
 
 (defun main ()
-  (run-window :sdl2-init-flags (:video :timer)
-  	      :title "Uniform"
-	      :buffer-object-value (initialize-gl #(1.0 0.0 0.0 0.0
-						    0.0 1.0 0.0 0.0
-						    0.0 0.0 1.0 0.0
-						    0.0 0.0 0.0 1.0))
-	      :render-function (lambda (b w)
-				 (gl:bind-buffer :array-buffer b)
-				 (gl:enable-vertex-attrib-array 0)
-				 (gl:vertex-attrib-pointer 0 2 :float :false 0 0)
-				 (gl:clear :color-buffer-bit)
-				 (gl:draw-arrays :triangles 0 3)
-				 (sdl2:gl-swap-window w))
-	      :render-args (util::buffer util::win)))
+  (let ((uniform (foreign-assign (cffi:foreign-alloc :float :count 16)
+				 1.0 0.0 0.0 0.0
+				 0.0 1.0 0.0 0.0
+				 0.0 0.0 1.0 0.0
+				 0.0 0.0 0.0 1.0)))
+    (unwind-protect
+      (run-window :sdl2-init-flags (:video :timer)
+    	          :title "Uniform"
+	          :buffer-object-value (initialize-gl uniform)
+	          :render-function (lambda (b w)
+	 			     (gl:bind-buffer :array-buffer b)
+				     (gl:enable-vertex-attrib-array 0)
+				     (gl:vertex-attrib-pointer 0 2 :float :false 0 0)
+				     (gl:clear :color-buffer-bit)
+				     (gl:draw-arrays :triangles 0 3)
+				     (sdl2:gl-swap-window w))
+	          :render-args (util::buffer util::win)))
+      (cffi:foreign-free uniform)))

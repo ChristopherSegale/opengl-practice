@@ -17,8 +17,8 @@
     (gl:free-gl-array arr)))
 
 (defun foreign-assign (f-array &rest data)
-  (dotimes (i (length data))
-    (setf (gl:glaref f-array i) (elt data i))))
+  (dotimes (i (length data) f-array)
+    (setf (cffi:mem-aref f-array :float i) (elt data i))))
 
 (defun compile-shader (shader source)
   (gl:shader-source shader source)

@@ -3,7 +3,7 @@
   :version "0.1"
   :author "Christopher Segale"
   :license "MIT"
-  :depends-on (:sdl2 :cl-opengl :create-shader)
+  :depends-on (:cffi :sdl2 :cl-opengl :create-shader)
   :serial t
   :components ((:module "util"
 		:components ((:file "package")
