@@ -16,6 +16,10 @@
     (gl:buffer-data :array-buffer :static-draw arr)
     (gl:free-gl-array arr)))
 
+(defun foreign-assign (f-array &rest data)
+  (dotimes (i (length data))
+    (setf (gl:glaref f-array i) (elt data i))))
+
 (defun compile-shader (shader source)
   (gl:shader-source shader source)
   (gl:compile-shader shader))

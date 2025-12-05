@@ -16,4 +16,7 @@
 			     (:file "square" :depends-on ("package"))))
 	       (:module "geometry" :depends-on ("util")
 		:components ((:file "package")
-			     (:file "geometry" :depends-on ("package"))))))
+			     (:file "geometry" :depends-on ("package"))))
+	       (:module "uniform" :depends-on ("util")
+		:components ((:file "package")
+			     (:file "uniform" :depends-on ("package"))))))
